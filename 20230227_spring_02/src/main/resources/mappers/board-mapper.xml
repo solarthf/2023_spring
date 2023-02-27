@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="boardns">
+<insert id="insertid">
+	INSERT INTO BOARD VALUES(
+        (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
+      , #{boardTitle}, #{boardWriter}, #{boardContent}
+      , #{boardOriginalFilename}, #{boardRenameFilename}
+      , DEFAULT, DEFAULT, (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
+      , DEFAULT, DEFAULT 
+	)
+</insert>
+
+<update id="updateid">
+	UPDATE BOARD SET 
+		   BOARD_TITLE = #{boardTitle}
+	     , BOARD_CONTENT = #{boardContent}
+		 , BOARD_ORIGINAL_FILENAME = #{boardOriginalFilename}
+		 , BOARD_RENAME_FILENAME = #{boardRenameFilename}
+		 , BOARD_DATE = SYSDATE
+	 WHERE BOARD_NUM = #{boardNum}
+</update>
+<update id="updateReadCount">
+	UPDATE BOARD SET 
+	       BOARD_READCOUNT = BOARD_READCOUNT + 1
+	 WHERE BOARD_NUM = #{boardNum}
+</update>
+<update id="updateForReply">
+	UPDATE BOARD SET 
+	       BOARD_REPLY_SEQ = BOARD_REPLY_SEQ + 1
+	 WHERE BOARD_REPLY_SEQ > (SELECT BOARD_REPLY_SEQ FROM BOARD WHERE BOARD_NUM = #{boardNum})
+	   AND BOARD_REF = (SELECT BOARD_REF FROM BOARD WHERE BOARD_NUM = #{boardNum})
+ </update>
+
+<delete id="deleteid">
+DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
+</delete>
+
+<select id="selectOneid" resultType="kh.spring.s02.board.model.vo.BoardVo">
+SELECT * FROM BOARD WHERE BOARD_NUM = #{boardNum}
+</select>
+<select id="selectListid" resultType="kh.spring.s02.board.model.vo.BoardVo">
+SELECT * FROM BOARD
+</select>
+<select id="selectOneCount" resultType="_int">
+SELECT COUNT(*) CNT FROM BOARD
+</select>
+</mapper>
