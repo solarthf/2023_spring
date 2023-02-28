@@ -8,5 +8,9 @@
 </head>
 <body>
 /board/read jsp
+<br>
+[${boardselect }]
+<br>
+${boardCount }
 </body>
 </html>
