@@ -13,7 +13,8 @@ public interface BoardService {
 //	public int updateForReply(int boardNum);
 	public int delete(int boardNum);
 	public BoardVo selectOne(int boardNum, String writer);
-	public List<BoardVo> selectList();
+	public List<BoardVo> selectList(); // 전체 페이지 읽기
+	public List<BoardVo> selectList(int currentPage, int limit); // paging 처리하여 읽기
 	public int selectOneCount();
 	
 }

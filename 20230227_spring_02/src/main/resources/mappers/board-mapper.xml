@@ -3,11 +3,23 @@
 <mapper namespace="boardns">
 <insert id="insertid" parameterType="kh.spring.s02.board.model.vo.BoardVo">
 	INSERT INTO BOARD VALUES(
-        (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
+	    (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
       , #{boardTitle}, #{boardWriter}, #{boardContent}
       , #{boardOriginalFilename}, #{boardRenameFilename}
-      , DEFAULT, DEFAULT, (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
-      , DEFAULT, DEFAULT 
+      , DEFAULT 
+      <choose>
+		<when test="boardNum != 0"> <!-- BOARD_NUM이 0이 아닐때 BOARD_LEVEL=1이 되고 이건 답글이 추가된다는 뜻 -->
+	  ,	(SELECT BOARD_LEVEL+1 FROM BOARD WHERE BOARD_NUM = #{boardNum})
+      , (SELECT BOARD_REF FROM BOARD WHERE BOARD_NUM = #{boardNum})
+      , (SELECT BOARD_REPLY_SEQ+1 FROM BOARD WHERE BOARD_NUM = #{boardNum})
+		</when>
+		<otherwise> <!-- BOARD_NUM이 없으면 그냥 게시글 추가 -->
+	  , DEFAULT
+	  , (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
+      , DEFAULT
+		</otherwise>
+	  </choose>
+      , DEFAULT 
 	)
 </insert>
 
@@ -15,8 +27,22 @@
 	UPDATE BOARD SET 
 		   BOARD_TITLE = #{boardTitle}
 	     , BOARD_CONTENT = #{boardContent}
+	     <if test="boardOriginalFilename != null and boardOriginalFilename neq ''.toString()"> 
+	     <!-- null 아니고 그리고 ''와 같지 않을때 아래 코드 실행 -->
 		 , BOARD_ORIGINAL_FILENAME = #{boardOriginalFilename}
-		 , BOARD_RENAME_FILENAME = #{boardRenameFilename}
+		 </if>
+		 <if test="boardOriginalFilename == null or boardOriginalFilename eq ''">
+		 , BOARD_ORIGINAL_FILENAME = null
+		 </if>
+		 , BOARD_RENAME_FILENAME =
+		 <choose>
+		 	<when test="boardRenameFilename != null and !boardRenameFilename.equals('')">
+		 	#{boardRenameFilename}	
+		 	</when>
+		 	<otherwise>
+		 	null
+		 	</otherwise>
+		 </choose>
 		 , BOARD_DATE = SYSDATE
 	 WHERE BOARD_NUM = #{boardNum}
 </update>
@@ -25,7 +51,7 @@
 	       BOARD_READCOUNT = BOARD_READCOUNT + 1
 	 WHERE BOARD_NUM = #{boardNum}
 </update>
-<update id="updateForReply">
+<update id="updateForReply"> <!-- 답글 작성시 기존 답글들 있다면 순서에 1 추가 -->
 	UPDATE BOARD SET 
 	       BOARD_REPLY_SEQ = BOARD_REPLY_SEQ + 1
 	 WHERE BOARD_REPLY_SEQ > (SELECT BOARD_REPLY_SEQ FROM BOARD WHERE BOARD_NUM = #{boardNum})
@@ -39,8 +65,12 @@ DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
 <select id="selectOneid" resultType="kh.spring.s02.board.model.vo.BoardVo">
 SELECT * FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </select>
-<select id="selectListid" resultType="kh.spring.s02.board.model.vo.BoardVo">
-SELECT * FROM BOARD
+<select id="selectListid" resultType="bvo"> <!-- bvo = mybatis에서 typeAlias로 정한 별칭 -->
+SELECT BOARD_NUM, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT
+     , BOARD_ORIGINAL_FILENAME, BOARD_RENAME_FILENAME, BOARD_DATE
+     , BOARD_LEVEL, BOARD_REF, BOARD_REPLY_SEQ, BOARD_READCOUNT 
+  FROM BOARD
+ ORDER BY BOARD_REF DESC, BOARD_REPLY_SEQ ASC
 </select>
 <select id="selectOneCount" resultType="_int">
 SELECT COUNT(*) CNT FROM BOARD

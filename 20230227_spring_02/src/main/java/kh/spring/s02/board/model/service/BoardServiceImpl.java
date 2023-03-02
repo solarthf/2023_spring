@@ -16,6 +16,10 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public int insert(BoardVo vo) {
+		if(vo.getBoardNum() != 0) {
+			// 답글 (원글 = 0) 순서 1 추가
+			dao.updateForReply(vo.getBoardNum());
+		}
 		return dao.insert(vo);
 	}
 
@@ -51,6 +55,11 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int selectOneCount() {
 		return dao.selectOneCount();
+	}
+
+	@Override
+	public List<BoardVo> selectList(int currentPage, int limit) {
+		return dao.selectList(currentPage, limit);
 	}
 
 	
