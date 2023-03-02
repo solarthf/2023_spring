@@ -1,5 +1,6 @@
 package kh.spring.s02.board.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
@@ -50,6 +51,16 @@ public class BoardDao {
 	}
 	public int selectOneCount() {
 		return sqlSession.selectOne("boardns.selectOneCount");
+	}
+	
+	// mapper에서 type이 bvo이면 List<BoardVo>가 된다.
+	public List<HashMap<String, Object>> tempSelect() {
+		//return sqlSession.selectOne("boardns.tempSelect");
+		List<HashMap<String, Object>> listmap = sqlSession.selectList("boardns.tempSelect");
+		for(HashMap<String, Object> map : listmap) {
+			System.out.println((String)map.get("boardDate"));
+		}
+		return listmap;
 	}
 
 	

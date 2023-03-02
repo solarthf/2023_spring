@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="boardns">
+<!-- insert, update, delete → resultType 적지 않는다. -->
+
+<!-- resultMap 사용법
+     1. 먼저 resultMap에서 컬럼명의 본래 값을 선언해주고 
+     2. select문의 resultMap에 먼저 선언한 resultMap의 id를 넣어준다
+  -->
+<!-- <resultMap type="hashmap" id="rsMap">
+	<result column="sdate" property="boardDate"/>
+	<result column="board_num" property="boardRef"/>
+</resultMap> -->
+ 
+<resultMap type="bvo" id="bvoMap">
+	<id column="BOARD_NUM" property="boardNum"/> <!-- 컬럼이 PK이면 id로 써도 된다. -->
+	<result column="BOARD_TITLE" property="boardTitle"/>
+	<result column="BOARD_WRITER" property="boardWriter"/>
+	<result column="BOARD_CONTENT" property="boardContent"/>
+	<result column="BOARD_ORIGINAL_FILENAME" property="boardOriginalFilename"/>
+	<result column="BOARD_RENAME_FILENAME" property="boardRenameFilename"/>
+	<result column="BOARD_DATE" property="boardDate"/>
+	<result column="BOARD_LEVEL" property="boardLevel"/>
+	<result column="BOARD_REF" property="boardRef"/>
+	<result column="BOARD_REPLY_SEQ" property="boardReplySeq"/>
+	<result column="BOARD_READCOUNT" property="boardReadcount"/>											
+</resultMap>
+
+
+<!-- <select id="tempSelect" resultMap="rsMap">
+	select sysdate as sdate, board_num from board
+</select> -->
+
+
+
 <insert id="insertid" parameterType="kh.spring.s02.board.model.vo.BoardVo">
 	INSERT INTO BOARD VALUES(
 	    (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
@@ -62,10 +94,10 @@
 DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </delete>
 
-<select id="selectOneid" resultType="kh.spring.s02.board.model.vo.BoardVo">
+<select id="selectOneid" resultType="bvo">
 SELECT * FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </select>
-<select id="selectListid" resultType="bvo"> <!-- bvo = mybatis에서 typeAlias로 정한 별칭 -->
+<select id="selectListid" resultMap="bvoMap"> <!-- bvo = mybatis에서 typeAlias로 정한 별칭 -->
 SELECT BOARD_NUM, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT
      , BOARD_ORIGINAL_FILENAME, BOARD_RENAME_FILENAME, BOARD_DATE
      , BOARD_LEVEL, BOARD_REF, BOARD_REPLY_SEQ, BOARD_READCOUNT 
@@ -74,5 +106,37 @@ SELECT BOARD_NUM, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT
 </select>
 <select id="selectOneCount" resultType="_int">
 SELECT COUNT(*) CNT FROM BOARD
+	<trim prefix="where" prefixOverrides="AND|OR">
+	<if test="searchWord != null and searchWord neq ''">
+		title like #{searchWord}
+		or content like #{searchWord}
+	</if>
+	</trim>
 </select>
+
+<select id="tempCallableSelect" statementType="CALLABLE" parameterType="bvo" resultType="bvo">
+{ 	CALL p1   }
+</select>
+
+<select id="tempTrimSelect">
+	select * from board
+	<trim prefix="where" prefixOverrides="AND|OR">
+	<if test="searchWord != null and searchWord neq ''">
+		title like #{searchWord}
+		or content like #{searchWord}
+	</if>
+	</trim>
+</select>
+
+<delete id="tempForeachDelete">
+	delete from board
+	<where>
+		1 <> 1 or
+		<foreach collection="list" item="bnum" open="board_num in (" close=")" separator=",">
+		#{bnum}
+		</foreach>
+	</where>
+</delete>
+
+
 </mapper>
