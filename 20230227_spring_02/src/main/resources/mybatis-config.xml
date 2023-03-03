@@ -7,6 +7,7 @@
 		<!-- 만약 ↓ 아래 코드를 작성하지 않는다면 mapper에서 resultMap을 선언해줘야 한다.  -->		
 		<!-- <setting name="mapUnderscoreToCamelCase" value="true"/> -->
 	</settings>
+	<!-- 자료형 별칭  -->
 	<typeAliases>
 		<typeAlias type="kh.spring.s02.board.model.vo.BoardVo" alias="bvo"/>
 	</typeAliases>
