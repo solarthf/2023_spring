@@ -23,7 +23,7 @@ public class MemberDao {
 	public int delete(String id) {
 		return sqlSession.delete("memberMapper.deleteId", id);
 	}
-	public int selectOne(String id) {
+	public MemberVo selectOne(String id) {
 		return sqlSession.selectOne("memberMapper.selectOneId", id);
 	}
 	public List<MemberVo> selectList() {

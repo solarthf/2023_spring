@@ -1,5 +1,8 @@
 package kh.spring.s02.member.model.vo;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class MemberVo {
 
 	private String id;

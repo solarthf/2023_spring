@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public int selectOne(String id) {
+	public MemberVo selectOne(String id) {
 		return dao.selectOne(id);
 	}
 
