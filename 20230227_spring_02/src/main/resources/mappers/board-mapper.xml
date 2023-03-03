@@ -102,16 +102,24 @@ SELECT BOARD_NUM, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT
      , BOARD_ORIGINAL_FILENAME, BOARD_RENAME_FILENAME, BOARD_DATE
      , BOARD_LEVEL, BOARD_REF, BOARD_REPLY_SEQ, BOARD_READCOUNT 
   FROM BOARD
+  <trim prefix="where" prefixOverrides="AND|OR">
+	<if test="searchWord != null and searchWord neq ''">
+		BOARD_TITLE like '%'||#{searchWord}||'%'
+		or BOARD_CONTENT like '%'||#{searchWord}||'%'
+		or BOARD_WRITER like '%'||#{searchWord}||'%'
+	</if>
+  </trim>
  ORDER BY BOARD_REF DESC, BOARD_REPLY_SEQ ASC
 </select>
 <select id="selectOneCount" resultType="_int">
 SELECT COUNT(*) CNT FROM BOARD
-	<trim prefix="where" prefixOverrides="AND|OR">
+  <trim prefix="where" prefixOverrides="AND|OR">
 	<if test="searchWord != null and searchWord neq ''">
-		title like #{searchWord}
-		or content like #{searchWord}
+		BOARD_TITLE like '%'||#{searchWord}||'%'
+		or BOARD_CONTENT like '%'||#{searchWord}||'%'
+		or BOARD_WRITER like '%'||#{searchWord}||'%'
 	</if>
-	</trim>
+  </trim>
 </select>
 
 <select id="tempCallableSelect" statementType="CALLABLE" parameterType="bvo" resultType="bvo">
@@ -122,8 +130,9 @@ SELECT COUNT(*) CNT FROM BOARD
 	select * from board
 	<trim prefix="where" prefixOverrides="AND|OR">
 	<if test="searchWord != null and searchWord neq ''">
-		title like #{searchWord}
-		or content like #{searchWord}
+		BOARD_TITLE like '%'||#{searchWord}||'%'
+		or BOARD_CONTENT like '%'||#{searchWord}||'%'
+		or BOARD_WRITER like '%'||#{searchWord}||'%'
 	</if>
 	</trim>
 </select>
@@ -131,7 +140,9 @@ SELECT COUNT(*) CNT FROM BOARD
 <delete id="tempForeachDelete">
 	delete from board
 	<where>
+		<![CDATA[
 		1 <> 1 or
+		]]>
 		<foreach collection="list" item="bnum" open="board_num in (" close=")" separator=",">
 		#{bnum}
 		</foreach>

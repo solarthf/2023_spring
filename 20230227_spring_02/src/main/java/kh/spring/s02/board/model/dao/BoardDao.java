@@ -53,6 +53,10 @@ public class BoardDao {
 		return sqlSession.selectOne("boardns.selectOneCount");
 	}
 	
+	public int selectOneCount(String searchWord) {
+		return sqlSession.selectOne("boardns.selectOneCount", searchWord);
+	}
+	
 	// mapper에서 type이 bvo이면 List<BoardVo>가 된다.
 	public List<HashMap<String, Object>> tempSelect() {
 		//return sqlSession.selectOne("boardns.tempSelect");
@@ -61,6 +65,10 @@ public class BoardDao {
 			System.out.println((String)map.get("boardDate"));
 		}
 		return listmap;
+	}
+
+	public List<BoardVo> selectList(int currentPage, int limit, String searchWord) {
+		return sqlSession.selectList("boardns.selectListid", searchWord, new RowBounds((currentPage-1)*limit, limit));
 	}
 
 	

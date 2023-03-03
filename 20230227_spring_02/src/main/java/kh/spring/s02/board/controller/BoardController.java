@@ -33,9 +33,12 @@ public class BoardController {
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView viewListBoard(ModelAndView mv) {
-		
+		String searchWord = "답";
 		int currentPage = 2; // 현재페이지 = 1
-		int totalCnt = service.selectOneCount();
+		// 검색어를 집어넣었을 때 나오는 총게시물 수
+		int totalCnt = service.selectOneCount(searchWord);
+		// 총게시물 수
+//		int totalCnt = service.selectOneCount(); 
 		int totalPage = (totalCnt % BOARD_LIMIT == 0) ? 
 				(totalCnt/BOARD_LIMIT) : (totalCnt/BOARD_LIMIT) + 1 ;
 		int startPage = (currentPage%PAGE_LIMIT ==0) ?
@@ -55,7 +58,16 @@ public class BoardController {
 //		mv.addObject("startPage", startPage);
 //		mv.addObject("endPage", endPage);
 //		mv.addObject("currentPage", currentPage);
-		mv.addObject("boardlist", service.selectList(currentPage, BOARD_LIMIT));
+		
+		// 검색단어는 제목, 내용, 작성자에서 포함되어있으면 찾기
+		// null, "" → 검색하지 않음
+//		String searchWord = null;
+//		String searchWord = "";
+//		String searchWord = "답";
+		
+		
+		
+		mv.addObject("boardlist", service.selectList(currentPage, BOARD_LIMIT, searchWord));
 		mv.setViewName("board/list");
 		return mv;
 	}
