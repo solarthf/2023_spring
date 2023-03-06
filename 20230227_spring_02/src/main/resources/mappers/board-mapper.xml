@@ -94,7 +94,7 @@
 DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </delete>
 
-<select id="selectOneid" resultType="bvo">
+<select id="selectOneid" resultMap="bvoMap">
 SELECT * FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </select>
 <select id="selectListid" resultMap="bvoMap"> <!-- bvo = mybatis에서 typeAlias로 정한 별칭 -->
