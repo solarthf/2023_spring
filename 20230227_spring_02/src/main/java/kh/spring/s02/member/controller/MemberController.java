@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -56,7 +57,13 @@ public class MemberController {
 		return mv;
 	}
 	@GetMapping("/update")
-	public ModelAndView viewUpdate(ModelAndView mv, String id) throws Exception{
+	public ModelAndView viewUpdate(ModelAndView mv
+			, String id // id라는 이름의 Parameter 없어도 된다. 없는 경우 null이 들어감
+			//, @RequestParam("aaa") int bbb
+			// String bbb = request.getParameter("aaa");
+			//, @RequestParam(name="ccc", required = false, defaultValue = "100") int ccc
+			// String ccc = request.getParameter("ccc"); required = false => 안들어올때도 있음. 기본값 100
+			) throws Exception{
 		MemberVo vo = service.selectOne(id);
 		mv.addObject("membervo", vo);
 		mv.setViewName("/member/update");
@@ -76,8 +83,8 @@ public class MemberController {
 		return mv;
 	}
 	@GetMapping("/delete")
-	public ModelAndView delete(ModelAndView mv) throws Exception{
-		String id = "aaa";
+	public ModelAndView delete(ModelAndView mv, String id) throws Exception{
+		//String id = "aaa";
 		service.delete(id);
 		return mv;
 	}
@@ -88,11 +95,14 @@ public class MemberController {
 			return mv;
 		}
 		MemberVo result = service.selectOne(id);
+		mv.addObject("membervo", result);
+		mv.setViewName("member/info");
 		return mv;
 	}
 	@GetMapping("/list")
 	public ModelAndView selectList(ModelAndView mv) throws Exception{
 		List<MemberVo> result = service.selectList();
+		mv.addObject("memberlist", result);
 		return mv;
 	}
 
