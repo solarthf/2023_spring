@@ -19,22 +19,22 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public int update(MemberVo vo) {
+	public int update(MemberVo vo) throws Exception{
 		return dao.update(vo);
 	}
 
 	@Override
-	public int delete(String id) {
+	public int delete(String id) throws Exception{
 		return dao.delete(id);
 	}
 
 	@Override
-	public MemberVo selectOne(String id) {
+	public MemberVo selectOne(String id) throws Exception{
 		return dao.selectOne(id);
 	}
 
 	@Override
-	public List<MemberVo> selectList() {
+	public List<MemberVo> selectList() throws Exception{
 		return dao.selectList();
 	}
 

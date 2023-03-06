@@ -24,16 +24,16 @@ public class MemberDao {
 //		} 
 		return result;
 	}
-	public int update(MemberVo vo) {
+	public int update(MemberVo vo) throws Exception{
 		return sqlSession.update("memberMapper.updateId", vo);
 	}
-	public int delete(String id) {
+	public int delete(String id) throws Exception{
 		return sqlSession.delete("memberMapper.deleteId", id);
 	}
-	public MemberVo selectOne(String id) {
+	public MemberVo selectOne(String id) throws Exception{
 		return sqlSession.selectOne("memberMapper.selectOneId", id);
 	}
-	public List<MemberVo> selectList() {
+	public List<MemberVo> selectList() throws Exception{
 		return sqlSession.selectList("memberMapper.selectListId");
 	}
 	

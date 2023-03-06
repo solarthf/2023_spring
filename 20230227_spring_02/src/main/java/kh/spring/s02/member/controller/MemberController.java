@@ -1,11 +1,13 @@
 package kh.spring.s02.member.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,19 +25,19 @@ public class MemberController {
 	private MemberService service;
 	
 	@GetMapping("/signUp")
-	public ModelAndView viewInsert(ModelAndView mv) {
+	public ModelAndView viewInsert(ModelAndView mv) throws Exception{
 		// url 주소, jsp 이름
 		mv.setViewName("member/signUp");
 		return mv;
 	}
 	@PostMapping("/signUp")
-	public ModelAndView insert(ModelAndView mv, MemberVo vo, RedirectAttributes rttr) {
+	public ModelAndView insert(ModelAndView mv, MemberVo vo, RedirectAttributes rttr) throws Exception{
 		int result = -1;
-		try {
+//		try {
 			result = service.insert(vo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		if(result > 0) {
 			// 회원가입성공
 			// 방법 1 - 사용불가(한글 ???라고 나옴)
@@ -54,7 +56,7 @@ public class MemberController {
 		return mv;
 	}
 	@GetMapping("/update")
-	public ModelAndView viewUpdate(ModelAndView mv, String id) {
+	public ModelAndView viewUpdate(ModelAndView mv, String id) throws Exception{
 		MemberVo vo = service.selectOne(id);
 		mv.addObject("membervo", vo);
 		mv.setViewName("/member/update");
@@ -69,18 +71,18 @@ public class MemberController {
 //		return mv;
 //	}
 	@PostMapping("/update")
-	public ModelAndView update(ModelAndView mv, MemberVo vo) {
+	public ModelAndView update(ModelAndView mv, MemberVo vo) throws Exception{
 		service.update(vo);
 		return mv;
 	}
 	@GetMapping("/delete")
-	public ModelAndView delete(ModelAndView mv) {
+	public ModelAndView delete(ModelAndView mv) throws Exception{
 		String id = "aaa";
 		service.delete(id);
 		return mv;
 	}
 	@GetMapping("/info")
-	public ModelAndView selectOne(ModelAndView mv, String id) {
+	public ModelAndView selectOne(ModelAndView mv, String id) throws Exception{
 		if(id == null) {
 			mv.setViewName("redirect:/");
 			return mv;
@@ -89,8 +91,51 @@ public class MemberController {
 		return mv;
 	}
 	@GetMapping("/list")
-	public ModelAndView selectList(ModelAndView mv) {
+	public ModelAndView selectList(ModelAndView mv) throws Exception{
 		List<MemberVo> result = service.selectList();
 		return mv;
 	}
+
+	
+	
+	@ExceptionHandler(NullPointerException.class)
+	public ModelAndView memberNullPointerExceptionHandler(NullPointerException e) {
+		e.printStackTrace();
+		
+		ModelAndView mv = new ModelAndView();
+ 		mv.addObject("msg", e.getMessage()+"오류가 발생했습니다. 다시 시도해주세요."); // controller가 아닌 jsp로 간다. 이 경우 signUp.jsp로 간다.
+		mv.setViewName("error/error500");
+		return mv;
+	}
+	@ExceptionHandler(SQLException.class)
+	public ModelAndView memberSQLExceptionHandler(SQLException e) {
+		e.printStackTrace();
+		
+		ModelAndView mv = new ModelAndView();
+ 		mv.addObject("msg", e.getMessage()+"오류가 발생했습니다. 다시 시도해주세요."); // controller가 아닌 jsp로 간다. 이 경우 signUp.jsp로 간다.
+		mv.setViewName("error/error500");
+		return mv;
+	}
+	@ExceptionHandler(NumberFormatException.class)
+	public ModelAndView memberNumberFormatExceptionHandler(NumberFormatException e) {
+		e.printStackTrace();
+		
+		ModelAndView mv = new ModelAndView();
+ 		mv.addObject("msg", e.getMessage()+"오류가 발생했습니다. 다시 시도해주세요."); // controller가 아닌 jsp로 간다. 이 경우 signUp.jsp로 간다.
+		mv.setViewName("error/error500");
+		return mv;
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView memberExceptionHandler(Exception e) {
+		e.printStackTrace();
+		
+		ModelAndView mv = new ModelAndView();
+ 		mv.addObject("msg", e.getMessage()+"오류가 발생했습니다. 다시 시도해주세요."); // controller가 아닌 jsp로 간다. 이 경우 signUp.jsp로 간다.
+		mv.setViewName("error/error500");
+		return mv;
+	}
 }
+
+
+	
