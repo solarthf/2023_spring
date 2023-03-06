@@ -5,6 +5,12 @@
 	<title>Home</title>
 </head>
 <body>
+<script type="text/javascript">
+	var msg = "${alertMsg}";
+	if(msg){
+		alert(msg);
+	}
+</script>
 <h1>
 	Hello world!  
 </h1>
