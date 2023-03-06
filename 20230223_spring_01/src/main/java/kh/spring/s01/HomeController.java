@@ -27,6 +27,7 @@ public class HomeController {
  
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
+		// selectList("board.list") → boardmapper의 (namespace.id)
 		List<String> boardvolist = sqlSession.selectList("board.list");
 		model.addAttribute("boardlist", boardvolist);
 		
