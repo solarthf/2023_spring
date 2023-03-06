@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kh.spring.s02.member.model.service.MemberService;
 import kh.spring.s02.member.model.vo.MemberVo;
@@ -28,14 +29,27 @@ public class MemberController {
 		return mv;
 	}
 	@PostMapping("/signUp")
-	public ModelAndView insert(ModelAndView mv, MemberVo vo) {
-		int result = service.insert(vo);
+	public ModelAndView insert(ModelAndView mv, MemberVo vo, RedirectAttributes rttr) {
+		int result = -1;
+		try {
+			result = service.insert(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(result > 0) {
 			// 회원가입성공
-			mv.setViewName("redirect:/?msg=회원가입성공");
+			// 방법 1 - 사용불가(한글 ???라고 나옴)
+//			mv.setViewName("redirect:/?msg=회원가입성공");
+			// 방법 2
+//			mv.addObject("msg", "회원가입성공");
+//			mv.setViewName("error/errorFailure");
+			// 방법 3 - Spring에서만(RedirectAttributes) 일회성 사용으로 f5를 눌러도 다시 나오지 않는다.
+			rttr.addFlashAttribute("msg", "회원가입성공~"); // controller가 아닌 jsp로 간다. 이 경우 home.jsp로 간다.
+			mv.setViewName("redirect:/");			
 		} else {
 			// 회원가입실패
-			mv.setViewName("redirect:/member/signUp?msg=회원가입실패");
+			rttr.addFlashAttribute("msg", "회원가입실패~"); // controller가 아닌 jsp로 간다. 이 경우 signUp.jsp로 간다.
+			mv.setViewName("redirect:/member/signUp");
 		}
 		return mv;
 	}

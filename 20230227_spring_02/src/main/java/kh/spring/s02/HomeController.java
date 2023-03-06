@@ -27,9 +27,10 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model, HttpSession session, HttpServletRequest req) {
-		String msg = req.getParameter("msg");
-		System.out.println(msg);
-		model.addAttribute("alertMsg", msg);
+		// 방법 1 안좋은 예
+//		String msg = req.getParameter("msg");
+//		System.out.println(msg);
+//		model.addAttribute("alertMsg", msg);
 		
 		logger.error("error Welcome home! The client locale is {}.", locale);
 		logger.warn("warn Welcome home! The client locale is {}.", locale);

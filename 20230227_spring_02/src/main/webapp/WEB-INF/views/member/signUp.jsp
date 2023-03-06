@@ -7,6 +7,12 @@
 <title>회원가입</title>
 </head>
 <body>
+<script type="text/javascript">
+	var msg2 = "${msg}";
+	if(msg2){
+		alert(msg2);
+	}
+</script>
 <form action="signUp" method="post">
 	<input type="text" name="id" placeholder="id"><br>
 	<input type="password" name="passwd" placeholder="pass"><br>

@@ -14,8 +14,15 @@ public class MemberDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public int insert(MemberVo vo) {
-		return sqlSession.insert("memberMapper.insertId", vo);
+	// Dao에서 try~catch 안하고 넘기고, service에서도 넘기면 controller에서 try~catch 만든다.
+	public int insert(MemberVo vo) throws Exception {
+		int result = -1;
+//		try {
+			result = sqlSession.insert("memberMapper.insertId", vo);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
+		return result;
 	}
 	public int update(MemberVo vo) {
 		return sqlSession.update("memberMapper.updateId", vo);

@@ -10,6 +10,11 @@
 	if(msg){
 		alert(msg);
 	}
+	
+	var msg2 = "${msg}";
+	if(msg2){
+		alert(msg2);
+	}
 </script>
 <h1>
 	Hello world!  

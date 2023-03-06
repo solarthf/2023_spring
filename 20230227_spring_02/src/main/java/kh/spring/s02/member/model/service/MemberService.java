@@ -8,7 +8,7 @@ import kh.spring.s02.member.model.vo.MemberVo;
 
 public interface MemberService {
 	
-	public int insert(MemberVo vo);
+	public int insert(MemberVo vo) throws Exception;
 	public int update(MemberVo vo);
 	public int delete(String id);
 	public MemberVo selectOne(String id);
