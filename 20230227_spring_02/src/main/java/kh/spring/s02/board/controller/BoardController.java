@@ -99,7 +99,7 @@ public class BoardController {
 		int result = service.delete(boardNum);
 	}
 	@GetMapping("/read")
-	public void viewReadBoard(Model model) {
+	public void viewReadBoard() {
 		int boardNum = 1;
 		String writer = "user11";
 		BoardVo vo = service.selectOne(boardNum, writer);
