@@ -13,10 +13,13 @@ public interface BoardService {
 //	public int updateForReply(int boardNum);
 	public int delete(int boardNum);
 	public BoardVo selectOne(int boardNum, String writer);
+	public int selectOneCount();
+	public int selectOneCount(String searchWord);
+
 	public List<BoardVo> selectList(); // 전체 페이지 읽기
 	public List<BoardVo> selectList(int currentPage, int limit); // paging 처리하여 읽기
-	public int selectOneCount();
-	public List<BoardVo> selectList(int currentPage, int limit, String searchWord);
-	public int selectOneCount(String searchWord);
+	public List<BoardVo> selectList(int currentPage, int limit, String searchWord); // paging처리 + 검색어
 	
+	public List<BoardVo> selectReplyList(int boardNum); // 어떤 글의 답글전체 읽기
+	public List<BoardVo> selectReplyList(int boardNum, int currentPage, int limit); // 어떤 글의 paging 처리한 답글전체 읽기
 }

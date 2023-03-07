@@ -1,6 +1,7 @@
 package kh.spring.s02.board.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.Gson;
 
 import kh.spring.s02.board.model.service.BoardService;
 import kh.spring.s02.board.model.vo.BoardVo;
@@ -35,7 +38,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView viewListBoard(ModelAndView mv) {
-		String searchWord = "답";
+		String searchWord = "";
 		int currentPage = 1; // 현재페이지 = 1
 		// 검색어를 집어넣었을 때 나오는 총게시물 수
 		int totalCnt = service.selectOneCount(searchWord);
@@ -105,8 +108,13 @@ public class BoardController {
 			, @RequestParam("boardNum") int boardNum//, @RequestParam("boardWriter") String writer
 			) {
 		String writer = "user11";
+		
 		BoardVo vo = service.selectOne(boardNum, writer);
 		mv.addObject("board", vo);
+		
+		List<BoardVo> replyList = service.selectReplyList(boardNum);
+		mv.addObject("replyList", replyList);
+		
 		mv.setViewName("board/read");
 		return mv;
 	}
@@ -184,9 +192,13 @@ public class BoardController {
 //		vo.setBoardTitle("ccc답제목");
 		vo.setBoardWriter("user6");
 		
+		// 답글 작성
 		service.insert(vo);
-		
-		return "ok";
+		// 연관 답글을 조회해서 ajax로 return해야함.
+		List<BoardVo> replyList = service.selectReplyList(vo.getBoardNum());
+		// ajax는 mv에 실어갈 수 없음!
+//		mv.addObject("replyList", replyList);
+		return new Gson().toJson(replyList);
 	}
 	
 //  GET, POST를 상관없이 한번에 적용할때

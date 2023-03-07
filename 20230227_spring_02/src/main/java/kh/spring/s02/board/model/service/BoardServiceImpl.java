@@ -71,6 +71,17 @@ public class BoardServiceImpl implements BoardService{
 		return dao.selectList(currentPage, limit, searchWord);
 	}
 
+	@Override
+	public List<BoardVo> selectReplyList(int boardNum) {
+		return dao.selectReplyList(boardNum);
+	}
+
+	@Override
+	public List<BoardVo> selectReplyList(int boardNum, int currentPage, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 	
