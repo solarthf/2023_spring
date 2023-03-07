@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public BoardVo selectOne(int boardNum, String writer) {
 		BoardVo result = dao.selectOne(boardNum);
-		if(!result.getBoardWriter().equals(writer)) {
+		if(result!=null && !result.getBoardWriter().equals(writer)) {
 			dao.updateReadCount(boardNum); // 작성자가 같지 않다면 조회수 증가하게 해달라
 		}
 		return result;

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import kh.spring.s02.board.model.service.BoardService;
@@ -34,7 +36,7 @@ public class BoardController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView viewListBoard(ModelAndView mv) {
 		String searchWord = "답";
-		int currentPage = 2; // 현재페이지 = 1
+		int currentPage = 1; // 현재페이지 = 1
 		// 검색어를 집어넣었을 때 나오는 총게시물 수
 		int totalCnt = service.selectOneCount(searchWord);
 		// 총게시물 수
@@ -99,11 +101,12 @@ public class BoardController {
 		int result = service.delete(boardNum);
 	}
 	@GetMapping("/read")
-	public ModelAndView viewReadBoard(ModelAndView mv) {
-		int boardNum = 1;
+	public ModelAndView viewReadBoard(ModelAndView mv
+			, @RequestParam("boardNum") int boardNum//, @RequestParam("boardWriter") String writer
+			) {
 		String writer = "user11";
 		BoardVo vo = service.selectOne(boardNum, writer);
-		mv.addObject("read", vo);
+		mv.addObject("board", vo);
 		mv.setViewName("board/read");
 		return mv;
 	}
@@ -170,7 +173,22 @@ public class BoardController {
 		service.insert(vo);
 		return mv;
 	}
+
+	@PostMapping("/insertReplyAjax")
+	@ResponseBody
+	public String insertReplyAjax(BoardVo vo) {
+//		int boardNum = 3;
+//		vo.setBoardNum(boardNum);
+//		
+//		vo.setBoardContent("ccc답내용");
+//		vo.setBoardTitle("ccc답제목");
+		vo.setBoardWriter("user6");
 		
+		service.insert(vo);
+		
+		return "ok";
+	}
+	
 //  GET, POST를 상관없이 한번에 적용할때
   //@RequestMapping(value = "/test")
 	@RequestMapping("/test")
