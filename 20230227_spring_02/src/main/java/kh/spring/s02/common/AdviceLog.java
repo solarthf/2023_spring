@@ -49,11 +49,13 @@ public class AdviceLog {
 		Object returnObj = null;
 		// pjp.getThis() 클래스명
 		// pjp.getSignature().getName() 메소드명
-		logger.info("▶Ctrl: "+ pjp.getThis()+ " " +pjp.getSignature().getName());
+		// logger.info("▶Ctrl: "+ pjp.getThis()+ " " +pjp.getSignature().getName());
+		logger.info("▶Ctrl:{} {}", pjp.getThis(), pjp.getSignature().getName());
 		
 		Object[] args = pjp.getArgs();
 		for(int i=0; i < args.length; i++) {
-			logger.info("▶Ctrl args[" + i + "]: " + args[i]);
+			// logger.info("▶Ctrl args[" + i + "]: " + args[i]);
+			logger.info("▶Ctrl args[{}]: {}", i, args[i]);
 		}
 		
 		StopWatch stopwatch = new StopWatch();
@@ -62,7 +64,8 @@ public class AdviceLog {
 		returnObj = pjp.proceed(); // try~ 안하고 던진다.
 		stopwatch.stop();
 		
-		logger.info("▶Ctrl Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
+		// logger.info("▶Ctrl Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
+		logger.info("▶Ctrl Return[{}]: {}", stopwatch.getTotalTimeMillis(), returnObj);
 		return returnObj;
 	
 	}
@@ -71,10 +74,13 @@ public class AdviceLog {
 	public Object aroundserviceImplPointCut(ProceedingJoinPoint pjp) throws Throwable {
 		
 		Object returnObj = null;
-		logger.info("▶▶Srvc: "+ pjp.getThis()+ " " +pjp.getSignature().getName());
+		// logger.info("▶▶Srvc: "+ pjp.getThis()+ " " +pjp.getSignature().getName());
+		logger.info("     ▶▶Srvc: "+ pjp.getThis()+" "+ pjp.getSignature().getName());
+				
 		Object[] args = pjp.getArgs();
 		for(int i=0; i < args.length; i++) {
-			logger.info("▶▶args[" + i + "]: " + args[i]);
+			// logger.info("▶▶args[" + i + "]: " + args[i]);
+			logger.info("     ▶▶Srvc args["+i+"]: "+ args[i]);
 		}
 		StopWatch stopwatch = new StopWatch();
 		stopwatch.start();
@@ -82,7 +88,7 @@ public class AdviceLog {
 		returnObj = pjp.proceed(); // try~ 안하고 던진다.
 		stopwatch.stop();
 		
-		logger.info("▶▶Srvc Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
+		logger.info("     ▶▶Srvc Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
 		
 		return returnObj;
 	}
@@ -91,10 +97,12 @@ public class AdviceLog {
 	public Object aroundDaoPointCut(ProceedingJoinPoint pjp) throws Throwable {
 		
 		Object returnObj = null;
-		logger.info("▶▶▶Dao: "+ pjp.getThis()+ " "+pjp.getSignature().getName());
+		// logger.info("▶▶▶Dao: "+ pjp.getThis()+ " "+pjp.getSignature().getName());
+		logger.info("        ▶▶▶Dao: "+ pjp.getThis()+ " "+pjp.getSignature().getName());
 		Object[] args = pjp.getArgs();
 		for(int i=0; i < args.length; i++) {
-			logger.info("▶▶▶args[" + i + "]: " + args[i]);
+			// logger.info("▶▶▶args[" + i + "]: " + args[i]);
+			logger.info("        ▶▶▶Dao args["+i+"]: "+ args[i]);
 		}
 		StopWatch stopwatch = new StopWatch();
 		stopwatch.start();
@@ -102,7 +110,7 @@ public class AdviceLog {
 		returnObj = pjp.proceed(); // try~ 안하고 던진다.
 		stopwatch.stop();
 		
-		logger.info("▶▶▶DAO Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
+		logger.info("        ▶▶▶DAO Return["+stopwatch.getTotalTimeMillis()+"]: " + returnObj);
 		
 		return returnObj;
 	}	
