@@ -40,4 +40,24 @@
 	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
 		<constructor-arg ref="sqlSessionFactoryBean"/>
 	</bean>
+	
+	<!-- transactionManager 사용예 -->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 사용할 메소드 위에 어노테이션으로 사용가능하다. 
+	BoardServiceImpl의 insert 메소드에 표시함@Transactional -->
+	<tx:annotation-driven/>
+	
+	<!-- tx:advice은 위 bean 객체를 받으니까 transaction-manager에 bean id를 적는다. -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select" read-only="true"/>
+			<tx:method name="insert" rollback-for="Exception"/>
+			<tx:method name="update" rollback-for="Exception"/>
+			<tx:method name="delete" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice> -->
+	
 </beans>
