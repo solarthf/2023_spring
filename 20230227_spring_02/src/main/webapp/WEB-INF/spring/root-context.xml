@@ -2,13 +2,21 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
 	<!-- properties 이용 (classpath 경로/파일명.properties)-->
-	<!-- <context:property-placeholder location="classpath:properties/khs.properties"/> -->
+	<!-- <context:property-placeholder location="classpath:properties/khs.properties"/> 
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+	    <property name="driverClassName" value="${h.driverName}"/>
+	    <property name="url" value="${h.url}"/> 
+	    <property name="username" value="${h.username}"/>
+	    <property name="password" value="${h.password}"/>
+	</bean> -->
 	
 	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
 	
