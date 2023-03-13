@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -41,7 +42,7 @@ public class BoardController {
 	// PAGE_LIMIT = 버튼 숫자 개수 << 1 2 3 >>
 	private final static int PAGE_LIMIT = 3;
 	
-	private final static String UPLOAD_FOLDER = "\\resources\\uploadfiles";
+	//private final static String UPLOAD_FOLDER = "\\resources\\uploadfiles";
 	
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -208,17 +209,20 @@ public class BoardController {
 // 
 //	}
 	
-	// 첨부파일 등록시(+파일저장 메소드)
+	// 원글작성-첨부파일 등록시(+파일저장 메소드)
 	@PostMapping("/insert")
 	public ModelAndView doInsertBoard(ModelAndView mv
 			, @RequestParam(name = "report", required = false) MultipartFile multi
 			, BoardVo vo
-			, HttpServletRequest request) {
-		String renameFilePath;
+			, HttpServletRequest request
+			, MultipartHttpServletRequest multiReq) {
+		Map<String, String> filePath;
+		List<Map<String, String>> fileListPath;
 		try {
-			renameFilePath = new FileUtil().saveFile(multi, request, null);
-			vo.setBoardOriginalFilename(multi.getOriginalFilename()); // a.png
-			vo.setBoardRenameFilename(renameFilePath);       //uuid_a.png
+			fileListPath = new FileUtil().saveFileList(multiReq, request, null);
+			filePath = new FileUtil().saveFile(multi, request, null);
+			vo.setBoardOriginalFilename(filePath.get("original"));   // a.png
+			vo.setBoardRenameFilename(filePath.get("rename"));       //uuid_a.png
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -226,7 +230,7 @@ public class BoardController {
 		int result = service.insert(vo);
 		return mv; 
 	}
-	
+		
 	// 원글 작성
 	@GetMapping("/insertPostTest")
 	public ModelAndView doInsertBoard(ModelAndView mv, BoardVo vo) {
