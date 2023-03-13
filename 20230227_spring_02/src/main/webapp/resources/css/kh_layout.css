@@ -1,0 +1,47 @@
+@charset "UTF-8";
+*{
+	box-sizing: border-box;
+}
+.wrap.header {
+	background-color: #fbf4c4;
+}
+
+.wrap.footer {
+	position:relative;
+	background-color: beige;
+}
+.wrap.footer > .btn.top {
+	 position: absolute;
+	 left: 10px;
+	 top: 10px;
+}
+header {
+	width: 960px; margin: 0 auto; 	/* 가로정렬을 위한 코드 */
+	border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+	position: relative; /* 자식 absolute 있으면 height 지정 */	
+	height: 300px
+}
+section {
+	width: 960px; margin: 0 auto;
+	border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+aside {
+	width: 960px; margin: 0 auto;
+	border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+footer {
+	width: 960px; margin: 0 auto;
+	border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
