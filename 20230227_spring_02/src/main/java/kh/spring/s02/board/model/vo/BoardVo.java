@@ -4,7 +4,17 @@ import java.sql.Date;
 
 import org.springframework.stereotype.Component;
 
-@Component // Component를 적어야 스프링이 객체를 전달해줄수 있다.
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+
+//@Component // Component를 적어야 스프링이 객체를 전달해줄수 있다.
+@ToString
+@Getter
+@Setter
 public class BoardVo {
 	private int boardNum;
 	private String boardTitle;
@@ -17,6 +27,7 @@ public class BoardVo {
 	private int boardRef;
 	private int boardReplySeq;
 	private int boardReadcount;
+	
 	@Override
 	public String toString() {
 		return "BoardVo [boardNum=" + boardNum + ", boardTitle=" + boardTitle + ", boardWriter=" + boardWriter
@@ -91,6 +102,5 @@ public class BoardVo {
 	public void setBoardReadcount(int boardReadcount) {
 		this.boardReadcount = boardReadcount;
 	}
-	
-	
+
 }
