@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="cpath" value="${pageContext.request.contextPath }"/>
+<c:set var="uploadpath" value="/resources/uploadfiles/"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +18,9 @@
 <div>
 ${board.boardContent }
 </div>
-
+<div>
+<img src="${cpath}${uploadpath}${board.boardRenameFilename }">
+</div>
 <form id="frmReply">
 <fieldset>
 <legend>답글작성</legend>

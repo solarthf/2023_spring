@@ -1,8 +1,11 @@
 package kh.spring.s02.board.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -35,6 +39,9 @@ public class BoardController {
 	private final static int BOARD_LIMIT = 5;
 	// PAGE_LIMIT = 버튼 숫자 개수 << 1 2 3 >>
 	private final static int PAGE_LIMIT = 3;
+	
+	private final static String UPLOAD_FOLDER = "\\resources\\uploadfiles";
+	
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView viewListBoard(ModelAndView mv) {
@@ -89,7 +96,7 @@ public class BoardController {
 		String boardContent = "수정내용";
 		String boardOriginalFilename = "";   // "" = 파일없음
 		String boardRenameFilename = "";     // "" = 파일없음
-		
+		 
 		BoardVo vo = new BoardVo();
 		vo.setBoardTitle(boardTitle);
 		vo.setBoardContent(boardContent);
@@ -149,8 +156,56 @@ public class BoardController {
  
 	}
 	
-//	@PostMapping("/insert")
-	
+	// 첨부파일 등록시
+	@PostMapping("/insert")
+	public ModelAndView doInsertBoard(ModelAndView mv
+			, @RequestParam(name = "report", required = false) MultipartFile multi
+			, BoardVo vo
+			, HttpServletRequest request) {
+		System.out.println("file org name:" + multi.getOriginalFilename());
+		
+		if(multi != null && !multi.equals("")) {
+			String originalFilename = multi.getOriginalFilename();
+			
+			// file을 server의 특정 위치에 저장
+			String webServerRoot = request.getSession().getServletContext().getRealPath("");
+			System.out.println(webServerRoot);
+			
+//			String savePath = webServerRoot + "\\resources\\uploadfiles";
+			String savePath = webServerRoot + UPLOAD_FOLDER;
+			// 저장할 폴더(\\resources\\uploadfiles)가 없다면 만들어줘야 함.
+			File folder = new File(savePath);
+			if(!folder.exists()) {
+				folder.mkdirs();
+			}
+			
+			// 시간을 활용한 rename			
+			String renameByTime = System.currentTimeMillis()+"_"+ originalFilename;
+			// UUID
+			String renameByUUID = UUID.randomUUID().toString()+"_"+ originalFilename;
+			
+			// String renameFilePath = savePath + "\\" + multi.getOriginalFilename();
+			String renameFilePath = savePath + "\\" + renameByUUID;
+			
+			System.out.println("rename file:" + renameFilePath);
+			// 파일을 savePath 위치에 저장
+			try {
+				multi.transferTo(new File(savePath + "\\" + renameByUUID));
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("file saved name:" + multi.getName());
+			vo.setBoardOriginalFilename(originalFilename); // a.png
+			vo.setBoardRenameFilename(renameByUUID);       //uuid_a.png
+		}
+				
+		vo.setBoardWriter("user22");
+		int result = service.insert(vo);
+		return mv;
+ 
+	}
 	// 원글 작성
 	@GetMapping("/insertPostTest")
 	public ModelAndView doInsertBoard(ModelAndView mv, BoardVo vo) {
@@ -182,6 +237,7 @@ public class BoardController {
 		return mv;
 	}
 
+	// 게시글 목록(read.jsp)에서 답글 작성 ajax
 	@PostMapping("/insertReplyAjax")
 	@ResponseBody
 	public String insertReplyAjax(BoardVo vo) {
