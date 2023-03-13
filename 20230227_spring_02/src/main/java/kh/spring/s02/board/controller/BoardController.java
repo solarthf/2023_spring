@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 import kh.spring.s02.board.model.service.BoardService;
 import kh.spring.s02.board.model.vo.BoardVo;
+import kh.spring.s02.common.file.FileUtil;
 
 @Controller
 @RequestMapping("/board") 
@@ -157,55 +158,75 @@ public class BoardController {
 	}
 	
 	// 첨부파일 등록시
+//	@PostMapping("/insert")
+//	public ModelAndView doInsertBoard(ModelAndView mv
+//			, @RequestParam(name = "report", required = false) MultipartFile multi
+//			, BoardVo vo
+//			, HttpServletRequest request) {
+//		System.out.println("file org name:" + multi.getOriginalFilename());
+//		
+//		if(multi != null && !multi.equals("")) {
+//			String originalFilename = multi.getOriginalFilename();
+//			
+//			// file을 server의 특정 위치에 저장
+//			String webServerRoot = request.getSession().getServletContext().getRealPath("");
+//			System.out.println(webServerRoot);
+//			
+////			String savePath = webServerRoot + "\\resources\\uploadfiles";
+//			String savePath = webServerRoot + UPLOAD_FOLDER;
+//			// 저장할 폴더(\\resources\\uploadfiles)가 없다면 만들어줘야 함.
+//			File folder = new File(savePath);
+//			if(!folder.exists()) {
+//				folder.mkdirs();
+//			}
+//			
+//			// 시간을 활용한 rename			
+//			String renameByTime = System.currentTimeMillis()+"_"+ originalFilename;
+//			// UUID
+//			String renameByUUID = UUID.randomUUID().toString()+"_"+ originalFilename;
+//			
+//			// String renameFilePath = savePath + "\\" + multi.getOriginalFilename();
+//			String renameFilePath = savePath + "\\" + renameByUUID;
+//			
+//			System.out.println("rename file:" + renameFilePath);
+//			// 파일을 savePath 위치에 저장
+//			try {
+//				multi.transferTo(new File(savePath + "\\" + renameByUUID));
+//			} catch (IllegalStateException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			System.out.println("file saved name:" + multi.getName());
+//			vo.setBoardOriginalFilename(originalFilename); // a.png
+//			vo.setBoardRenameFilename(renameByUUID);       //uuid_a.png
+//		}
+//				
+//		vo.setBoardWriter("user22");
+//		int result = service.insert(vo);
+//		return mv;
+// 
+//	}
+	
+	// 첨부파일 등록시(+파일저장 메소드)
 	@PostMapping("/insert")
 	public ModelAndView doInsertBoard(ModelAndView mv
 			, @RequestParam(name = "report", required = false) MultipartFile multi
 			, BoardVo vo
 			, HttpServletRequest request) {
-		System.out.println("file org name:" + multi.getOriginalFilename());
-		
-		if(multi != null && !multi.equals("")) {
-			String originalFilename = multi.getOriginalFilename();
-			
-			// file을 server의 특정 위치에 저장
-			String webServerRoot = request.getSession().getServletContext().getRealPath("");
-			System.out.println(webServerRoot);
-			
-//			String savePath = webServerRoot + "\\resources\\uploadfiles";
-			String savePath = webServerRoot + UPLOAD_FOLDER;
-			// 저장할 폴더(\\resources\\uploadfiles)가 없다면 만들어줘야 함.
-			File folder = new File(savePath);
-			if(!folder.exists()) {
-				folder.mkdirs();
-			}
-			
-			// 시간을 활용한 rename			
-			String renameByTime = System.currentTimeMillis()+"_"+ originalFilename;
-			// UUID
-			String renameByUUID = UUID.randomUUID().toString()+"_"+ originalFilename;
-			
-			// String renameFilePath = savePath + "\\" + multi.getOriginalFilename();
-			String renameFilePath = savePath + "\\" + renameByUUID;
-			
-			System.out.println("rename file:" + renameFilePath);
-			// 파일을 savePath 위치에 저장
-			try {
-				multi.transferTo(new File(savePath + "\\" + renameByUUID));
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			System.out.println("file saved name:" + multi.getName());
-			vo.setBoardOriginalFilename(originalFilename); // a.png
-			vo.setBoardRenameFilename(renameByUUID);       //uuid_a.png
+		String renameFilePath;
+		try {
+			renameFilePath = new FileUtil().saveFile(multi, request, null);
+			vo.setBoardOriginalFilename(multi.getOriginalFilename()); // a.png
+			vo.setBoardRenameFilename(renameFilePath);       //uuid_a.png
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-				
 		vo.setBoardWriter("user22");
 		int result = service.insert(vo);
-		return mv;
- 
+		return mv; 
 	}
+	
 	// 원글 작성
 	@GetMapping("/insertPostTest")
 	public ModelAndView doInsertBoard(ModelAndView mv, BoardVo vo) {
