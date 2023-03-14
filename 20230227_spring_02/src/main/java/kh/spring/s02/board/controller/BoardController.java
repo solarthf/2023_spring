@@ -263,14 +263,16 @@ public class BoardController {
 	}
 
 	// 게시글 목록(read.jsp)에서 답글 작성 ajax
+	// 파일첨부 report 추가
 	@PostMapping("/insertReplyAjax")
 	@ResponseBody
-	public String insertReplyAjax(BoardVo vo) {
-//		int boardNum = 3;
-//		vo.setBoardNum(boardNum);
-//		
-//		vo.setBoardContent("ccc답내용");
-//		vo.setBoardTitle("ccc답제목");
+	public String insertReplyAjax(BoardVo vo
+			, MultipartFile report) {
+		if(report != null) {
+			System.out.println(report.getOriginalFilename());
+		}else {
+			System.out.println("파일없음");
+		}
 		vo.setBoardWriter("user6");
 		
 		// 답글 작성
