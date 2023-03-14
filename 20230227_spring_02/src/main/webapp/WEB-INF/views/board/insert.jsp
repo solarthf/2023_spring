@@ -17,7 +17,7 @@
 	<textarea name="boardContent" placeholder="내용"></textarea><br>           
 	<!-- file의 경우 name은 vo와 다른 이름으로 해야함!! -->
 	<input type="file" name="report" placeholder="첨부파일"><br>
-	<button type="text" id="btnCheck">textarea값 확인</button>
+	<button type="button" id="btnCheck">textarea값 확인</button>
 	<button type="submit">게시글 등록</button>
 </form>
 
