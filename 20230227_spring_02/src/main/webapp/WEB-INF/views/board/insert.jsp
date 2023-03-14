@@ -24,14 +24,14 @@
 <script>
 	CKEDITOR.replace( 'boardContent'
 			, {
-				filebrowserUploadUrl: 'imageUploda.do'
+				filebrowserUploadUrl: 'imageUpload.do'
 				// ckfinder 추가하여 이미지 찾기도 가능함
 			   }
 	);
 	$('#btnCheck').click(function() {
 		console.log($("[name=boardContent]").val());
 		console.log($("[name=boardContent]").html());
-		console.log(CKEDITOR.instances.boardContent.getData());
+		console.log(CKEDITOR.instances.boardContent.getData()); // html태그형태로 textarea의 값을꺼내줌
 	});
 </script>
 </body>

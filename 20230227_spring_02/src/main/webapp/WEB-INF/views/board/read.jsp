@@ -64,11 +64,11 @@ ${board.boardContent }
 		console.log(this);	    // this => DOM 형태
 		console.log($(this));	// $(this) => jQuery 형태
 //		console.log($("#frmReply").serialize()); // QueryString 형태(boardTitle=값&boardContent=값&boardNum=값)
-		// file이 포함되어있는 경우 serialize()로 데이터 전달 不可, ↓ formdata 사용해야함
+		// file이 포함되어있는 경우 serialize()로 데이터 전달 不可, contentType:"multipart/form-data" 적용 안됨.
 		let formdata = new FormData();
 		formdata.append("boardTitle", $("[name=boardTitle]").val());
 		formdata.append("boardContent", $("[name=boardContent]").val());
-		formdata.append("report", $("[name=report]").files[0]);
+		formdata.append("report", $("[name=report]")[0].files[0]);
 		formdata.append("boardNum", $("[name=boardNum]").val());
 		console.log(formdata);
 		
@@ -78,6 +78,8 @@ ${board.boardContent }
 			, type: "post" // ↓ data => form안의 들어가는 내용
 //			, data: {boardTitle: $("#a").val(), boardContent:$("#b").val(), boardNum:'${board.boardNum}'}
 //			, data: $("#frmReply").serialize()
+			, contentType: false
+			, processData: false
 			, data: formdata
 			, dataType: "json" // success에 들어오는 데이터가 json 모양일것이고 이것을 js object로 변형해서 return값으로 보내라
 			, success: function (result) { // result => controller의 return값이 들어옴
