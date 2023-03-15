@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -117,9 +118,19 @@ public class BoardController {
 		int boardNum = 19;
 		int result = service.delete(boardNum);
 	}
-	@GetMapping("/read")
+	
+	// URL
+	// 1. /board/read?boardNum=27&replyPage=3
+	    //location.href="board/read?boardNum=${elboardnum}&replyPage=${elreplypage}"
+	// 2. /board/read/27/3
+        //location.href="board/read/${elboardnum}/${elreplypage}"
+	
+	
+	// 글 상세 읽기 화면
+	@GetMapping("/read/{boardNum}")
 	public ModelAndView viewReadBoard(ModelAndView mv
-			, @RequestParam("boardNum") int boardNum//, @RequestParam("boardWriter") String writer
+			, @PathVariable int boardNum	
+//			, @RequestParam("boardNum") int boardNum//, @RequestParam("boardWriter") String writer
 			) {
 		String writer = "user11";
 		

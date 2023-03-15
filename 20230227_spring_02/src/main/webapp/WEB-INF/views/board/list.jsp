@@ -19,7 +19,7 @@
 	</tr>
 <c:forEach items="${boardlist }" var="board"> 
 	<tr>
-		<td>${board.boardNum }</td>
+		<td><a href="<%=request.getContextPath()%>/board/read/${board.boardNum }">${board.boardNum }</td>
 		<td><a href="<%=request.getContextPath()%>/board/read?boardNum=${board.boardNum }">${board.boardTitle }</a></td>
 		<td>${board.boardWriter }</td>
 		<td>${board.boardDate }</td>
