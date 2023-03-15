@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,10 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService service;
+	
+	@Autowired
+	@Qualifier("fileUtil")
+	private FileUtil fileUtil; // new FileUtil를 안만들고 쓸때 선언해주고 쓰면 된다. 
 	
 	// BOARD_LIMIT = 화면에 보이는 글 개수
 	private final static int BOARD_LIMIT = 5;
@@ -219,8 +224,8 @@ public class BoardController {
 		Map<String, String> filePath;
 		List<Map<String, String>> fileListPath;
 		try {
-			fileListPath = new FileUtil().saveFileList(multiReq, request, null);
-			filePath = new FileUtil().saveFile(multi, request, null);
+			fileListPath = fileUtil.saveFileList(multiReq, request, null);
+			filePath = fileUtil.saveFile(multi, request, null);
 			vo.setBoardOriginalFilename(filePath.get("original"));   // a.png
 			vo.setBoardRenameFilename(filePath.get("rename"));       //uuid_a.png
 		} catch (Exception e) {

@@ -8,13 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-
+@Component("fileUtil") // Controller에 @Autowired,@Qualifier("fileUtil")를 같이 써줘야 한다.
+@PropertySource("classpath:properties/khs2.properties") // 파일경로를 properties폴더에 저장하고 불러올때 쓰는 어노테이션
 public class FileUtil {	
-	private final static String UPLOAD_FOLDER = "\\resources\\uploadfiles";
-		
+//	private final static String UPLOAD_FOLDER = "${local.repository}";	
+	
+	@Value("${local.repository}") // @Value 사용시 final static 제거
+	private String UPLOAD_FOLDER;
 	
 	public List<Map<String, String>> saveFileList(MultipartHttpServletRequest multiReq, HttpServletRequest request, String addedPath) throws Exception {
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
