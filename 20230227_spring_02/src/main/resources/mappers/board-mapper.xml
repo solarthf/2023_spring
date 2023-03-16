@@ -31,6 +31,29 @@
 	select sysdate as sdate, board_num from board
 </select> -->
 
+<resultMap type="bvo" id="bvoCollectionMap">
+	<id column="BOARD_NUM" property="boardNum"/> <!-- 컬럼이 PK이면 id로 써도 된다. -->
+	<result column="BOARD_TITLE" property="boardTitle"/>
+	<result column="BOARD_WRITER" property="boardWriter"/>
+	<result column="BOARD_CONTENT" property="boardContent"/>
+	<result column="BOARD_ORIGINAL_FILENAME" property="boardOriginalFilename"/>
+	<result column="BOARD_RENAME_FILENAME" property="boardRenameFilename"/>
+	<result column="BOARD_DATE" property="boardDate"/>
+	<result column="BOARD_LEVEL" property="boardLevel"/>
+	<result column="BOARD_REF" property="boardRef"/>
+	<result column="BOARD_REPLY_SEQ" property="boardReplySeq"/>
+	<result column="BOARD_READCOUNT" property="boardReadcount"/>
+	
+	<!-- ofType = alias 생성시 대체 가능 
+		 collection column → JOIN할때의 기준이 되는 컬럼값을 넣어준다. 
+	     그러나 그 컬럼값이 id일 경우 생략 가능하다 -->
+	<collection column="BOARD_NUM" property="boardFileList" ofType="kh.spring.s02.board.model.vo.BoardFileVo">
+		<result column="ORIGINAL_FILENAME" property="originalFilename"/>
+		<result column="RENAME_FILENAME" property="renameFilename"/>
+	</collection>	
+
+	<!-- association → 2개의 테이블이 1:1 관계일 때 사용한다 -->
+</resultMap>
 
 
 <insert id="insertid" parameterType="kh.spring.s02.board.model.vo.BoardVo">
@@ -97,6 +120,15 @@ DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
 <select id="selectOneid" resultMap="bvoMap">
 SELECT * FROM BOARD WHERE BOARD_NUM = #{boardNum}
 </select>
+
+<select id="selectOneidCollection" resultMap="bvoCollectionMap"> 
+SELECT * 
+  FROM BOARD
+  JOIN BOARD_FILE
+ USING (BOARD_NUM)
+ WHERE BOARD_NUM = #{boardNum}
+</select>
+
 <select id="selectListid" resultMap="bvoMap"> <!-- bvo = mybatis에서 typeAlias로 정한 별칭 -->
 SELECT BOARD_NUM, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT
      , BOARD_ORIGINAL_FILENAME, BOARD_RENAME_FILENAME, BOARD_DATE

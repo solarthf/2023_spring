@@ -1,6 +1,7 @@
 package kh.spring.s02.board.model.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 
-//@Component // Component를 적어야 스프링이 객체를 전달해줄수 있다.
+@Component // Component를 적어야 스프링이 객체를 전달해줄수 있다.
 @ToString
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BoardVo {
 	private int boardNum;
 	private String boardTitle;
@@ -27,6 +30,11 @@ public class BoardVo {
 	private int boardRef;
 	private int boardReplySeq;
 	private int boardReadcount;
+	
+	// 1:N 관계일 경우 List 사용 → mapper에서 collection 사용
+	private List<BoardFileVo> boardFileList;
+	
+	
 	
 	@Override
 	public String toString() {

@@ -21,6 +21,21 @@ ${board.boardContent }
 <div>
 <img src="${cpath}${uploadpath}${board.boardRenameFilename }">
 </div>
+<!-- 첨부파일 모두 display -->
+<div>
+<c:forEach varStatus="vs" items="${board.boardFileList}" var="boardfile">
+<div>
+	<p>${vs.count}번째 ${boardfile.originalFilename}</p>
+	<img src="${cpath }${uploadpath}${boardfile.renameFilename}">
+	<hr>
+</div>
+</c:forEach>
+</div>
+
+
+
+<!-- 답글작성 -->
+<hr>
 <form id="frmReply" enctype="multipart/form-data">
 <fieldset>
 <legend>답글작성</legend>

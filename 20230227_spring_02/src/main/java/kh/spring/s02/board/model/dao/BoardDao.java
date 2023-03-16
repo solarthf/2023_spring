@@ -38,7 +38,8 @@ public class BoardDao {
 	}
 	
 	public BoardVo selectOne(int boardNum) { // PK
-		return sqlSession.selectOne("boardns.selectOneid", boardNum);
+//		return sqlSession.selectOne("boardns.selectOneid", boardNum);
+		return sqlSession.selectOne("boardns.selectOneidCollection", boardNum);
 	}
 	public List<BoardVo> selectList() {
 		return sqlSession.selectList("boardns.selectListid");
