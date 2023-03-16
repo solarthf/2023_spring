@@ -9,8 +9,9 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
-	<!-- properties 이용 (classpath 경로/파일명.properties)-->
-	<!-- <context:property-placeholder location="classpath:properties/khs.properties"/> 
+	<!-- properties 이용 (classpath 경로/파일명.properties)
+    전체 → <context:property-placeholder location="classpath:properties/*.properties"/>
+	한개 → <context:property-placeholder location="classpath:properties/khs.properties"/> 
 	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
 	    <property name="driverClassName" value="${h.driverName}"/>
 	    <property name="url" value="${h.url}"/> 
