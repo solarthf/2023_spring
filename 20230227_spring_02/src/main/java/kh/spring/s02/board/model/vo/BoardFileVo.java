@@ -16,10 +16,30 @@ import lombok.ToString;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class BoardFileVo {
 //	private int boardNum;	// BoardVo의 boardNum과 중복되므로 삭제 무방
 	private String originalFilename;
 	private String renameFilename;
+//	@Override
+//	public String toString() {
+//		return "BoardFileVo [originalFilename=" + originalFilename + ", renameFilename=" + renameFilename + "]";
+//	}
+//	public String getOriginalFilename() {
+//		return originalFilename;
+//	}
+//	public void setOriginalFilename(String originalFilename) {
+//		this.originalFilename = originalFilename;
+//	}
+//	public String getRenameFilename() {
+//		return renameFilename;
+//	}
+//	public void setRenameFilename(String renameFilename) {
+//		this.renameFilename = renameFilename;
+//	}
+//	public BoardFileVo() {
+//		super();
+//	}
 	 
 	
 	 
