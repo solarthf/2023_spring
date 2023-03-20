@@ -283,9 +283,18 @@ public class BoardController {
 	@PostMapping("/insertReplyAjax")
 	@ResponseBody
 	public String insertReplyAjax(BoardVo vo
-			, MultipartFile report) {
+			, MultipartFile report
+			, HttpServletRequest request) {
+		Map<String, String> filePath = null;
 		if(report != null) {
 			System.out.println(report.getOriginalFilename());
+			try {
+				filePath = new FileUtil().saveFile(report, request, null);
+				vo.setBoardOriginalFilename(filePath.get("original"));
+				vo.setBoardRenameFilename(filePath.get("rename"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}else {
 			System.out.println("파일없음");
 		}

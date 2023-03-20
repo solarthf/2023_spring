@@ -2,6 +2,7 @@ package kh.spring.s02.board.model.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -16,8 +17,20 @@ public class BoardDao {
 	@Autowired
 	private SqlSession sqlSession; // root-context의 id와 동일(대소문자 구분)하게 적는다.
 	
-	public int insert(BoardVo vo) {
-		return sqlSession.insert("boardns.insertid", vo);
+//	public int insert(BoardVo vo) {
+//		return sqlSession.insert("boardns.insertid", vo);
+//	}
+	
+	public int getSeqBoardNum() {
+		return sqlSession.insert("boardns.getSeqBoardNum");
+	}	
+
+	// sequence 사용한 insert
+	public int insert(Map<String, Object> map) {
+		return sqlSession.insert("boardns.insertid", map);
+	}
+	public int insertFile(Map<String, Object> map) {
+		return sqlSession.insert("boardns.insertFile", map);		
 	}
 	
 	public int update(BoardVo vo) {
@@ -75,6 +88,8 @@ public class BoardDao {
 	public List<BoardVo> selectReplyList(int boardNum) {
 		return sqlSession.selectList("boardns.selectReplyList", boardNum);
 	}
+
+	
 
 	
 }

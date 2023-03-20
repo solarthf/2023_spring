@@ -1,6 +1,8 @@
 package kh.spring.s02.board.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,18 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	@Transactional  
 	public int insert(BoardVo vo) {
+		int seqBoardNum = dao.getSeqBoardNum();
 		if(vo.getBoardNum() != 0) {
 			// 답글 (원글 = 0) 순서 1 추가
 			dao.updateForReply(vo.getBoardNum());
 		}
-		return dao.insert(vo);
+		// Dao에서 매개변수 2개 이상으로 넣어가지 못하므로 Map을 만들어서 넣어준다.
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bvo", vo);
+		map.put("seqBoardNum", seqBoardNum);
+		
+		dao.insert(map);
+		return dao.insertFile(map);
 	}
 
 	@Override

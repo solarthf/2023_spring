@@ -56,6 +56,7 @@
 </resultMap>
 
 
+<!-- NVL(MAX(BOARD_NUM)+1 사용한 예
 <insert id="insertid" parameterType="kh.spring.s02.board.model.vo.BoardVo">
 	INSERT INTO BOARD VALUES(
 	    (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
@@ -63,12 +64,12 @@
       , #{boardOriginalFilename}, #{boardRenameFilename}
       , DEFAULT 
       <choose>
-		<when test="boardNum != 0"> <!-- BOARD_NUM이 0이 아닐때 BOARD_LEVEL=1이 되고 이건 답글이 추가된다는 뜻 -->
+		<when test="boardNum != 0"> BOARD_NUM이 0이 아닐때 BOARD_LEVEL=1이 되고 이건 답글이 추가된다는 뜻
 	  ,	(SELECT BOARD_LEVEL+1 FROM BOARD WHERE BOARD_NUM = #{boardNum})
       , (SELECT BOARD_REF FROM BOARD WHERE BOARD_NUM = #{boardNum})
       , (SELECT BOARD_REPLY_SEQ+1 FROM BOARD WHERE BOARD_NUM = #{boardNum})
 		</when>
-		<otherwise> <!-- BOARD_NUM이 없으면 그냥 게시글 추가 -->
+		<otherwise> BOARD_NUM이 없으면 그냥 게시글 추가
 	  , DEFAULT
 	  , (SELECT NVL(MAX(BOARD_NUM), 0)+1 FROM BOARD)
       , DEFAULT
@@ -76,8 +77,36 @@
 	  </choose>
       , DEFAULT 
 	)
-</insert>
+</insert> -->
 
+<!-- sequence 사용한 insert -->
+<select id="getSeqBoardNum" resultType="_int">
+	SELECT SEQ_BOARD_NUM.nextval FROM DUAL
+</select>
+<insert id="insertid" parameterType="hashmap">
+	INSERT INTO BOARD VALUES(
+	    #{seqBoardNum}
+      , #{bvo.boardTitle}, #{bvo.boardWriter}, #{bvo.boardContent}
+      , #{bvo.boardOriginalFilename}, #{bvo.boardRenameFilename}
+      , DEFAULT 
+      <choose>
+		<when test="boardNum != 0"> <!-- BOARD_NUM이 0이 아닐때 BOARD_LEVEL=1이 되고 이건 답글이 추가된다는 뜻 -->
+	  ,	(SELECT BOARD_LEVEL+1 FROM BOARD WHERE BOARD_NUM = #{bvo.boardNum})
+      , (SELECT BOARD_REF FROM BOARD WHERE BOARD_NUM = #{bvo.boardNum})
+      , (SELECT BOARD_REPLY_SEQ+1 FROM BOARD WHERE BOARD_NUM = #{bvo.boardNum})
+		</when>
+		<otherwise> <!-- BOARD_NUM이 없으면 그냥 게시글 추가 -->
+	  , DEFAULT
+	  , #{seqBoardNum}
+      , DEFAULT
+		</otherwise>
+	  </choose>
+      , DEFAULT 
+	)
+</insert>
+<insert id="insertFile" parameterType="hashmap">
+	INSERT INTO BOARD_FILE VALUES(#{seqBoardNum}, #{bvo.boardOriginalFilename}, #{bvo.boardRenameFilename})
+</insert>
 <update id="updateid">
 	UPDATE BOARD SET 
 		   BOARD_TITLE = #{boardTitle}

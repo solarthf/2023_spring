@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -22,8 +23,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class FileUtil {	
 //	private final static String UPLOAD_FOLDER = "${local.repository}";	
 	
-	@Value("${local.repository}") // @Value 사용시 final static 제거
-	private String UPLOAD_FOLDER;
+//	@Value("${local.repository}") // @Value 사용시 final static 제거
+//	private String UPLOAD_FOLDER;
+	
+	@Autowired
+	private Environment env;
 	
 	public List<Map<String, String>> saveFileList(MultipartHttpServletRequest multiReq, HttpServletRequest request, String addedPath) throws Exception {
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
@@ -56,7 +60,7 @@ public class FileUtil {
 			
 			// file을 server의 특정 위치에 저장
 			String webServerRoot = request.getSession().getServletContext().getRealPath("");
-			String savePath = webServerRoot + UPLOAD_FOLDER;
+			String savePath = webServerRoot + env.getProperty("local.repository");
 			if(addedPath != null) {
 				savePath += addedPath;
 			}
@@ -77,7 +81,7 @@ public class FileUtil {
 			multi.transferTo(new File(savePath + "\\" + renameByTime));		
 			
 			result.put("original", originalFilename);
-			result.put("rename", renameFilePath);
+			result.put("rename", renameByTime);
 		}
 		return result; 
 	}
