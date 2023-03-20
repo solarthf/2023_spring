@@ -22,7 +22,7 @@ public class BoardDao {
 //	}
 	
 	public int getSeqBoardNum() {
-		return sqlSession.insert("boardns.getSeqBoardNum");
+		return sqlSession.selectOne("boardns.getSeqBoardNum");
 	}	
 
 	// sequence 사용한 insert
